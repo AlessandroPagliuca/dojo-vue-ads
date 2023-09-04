@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       store,
-      announcement: null, // Inizializziamo announcement come null
+      announcement: null,
     }
   },
   methods: {
