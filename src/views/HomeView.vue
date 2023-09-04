@@ -1,5 +1,7 @@
 <template>
-  test
+  <div class="">
+    <h1 class="color-white">Passa a Premium</h1>
+  </div>
 </template>
 
 <script>
@@ -31,6 +33,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+$blue-1: #4383e2;
+$white: #ffffff;
 
-<!-- blue-1= #4383e2; -->
+.color-white {
+  color: #ffffff;
+}
+</style>
+
