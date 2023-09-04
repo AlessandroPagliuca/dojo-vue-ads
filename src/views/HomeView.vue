@@ -18,33 +18,44 @@
     <div class="d-flex flex-column align-items-start py-5">
       <h2 class="fw-semibold display-1">Passa a Premium gratis per 1 mese</h2>
       <span class="fw-semibold py-4">Al termine dell'offerta, solo € 9,99 al mese. Annulla in qualsiasi momento</span>
-      <button class="btn btn-bg text-uppercase rounded-5 py-3 px-5">vedi i piani</button>
+      <button class="btn btn-bg text-uppercase rounded-5 py-3 px-4" @click="openModal">vedi i piani</button>
       <small class="pt-4">Si applicano Termini e condizioni. L'offerta di 1 mese gratis non è disponibile per gli utenti
         che hanno già
         provato Spotify Premium.</small>
     </div>
+    <!-- Componente Modal -->
+    <ModalComp ref="modal" :data="announcement" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { store } from '../store';
+import ModalComp from '../components/ModalComp.vue';
 export default {
   name: 'HomeView',
+  components: {
+    ModalComp,
+  },
   data() {
     return {
-      store,
-      announcement: null,
+      store, //Take apiUrl from the store
+      announcement: null,// Initialization announcement = null, return the data to be printed in the page via the axios call
     }
   },
   methods: {
+    //temporany function for open modal
+    openModal() {
+      this.$refs.modal.openModal();
+    },
+    // Function for call axios to get the annuncement data
     async getData() {
       try {
         const response = await axios.get(`${store.apiUrl}/home`)
-        this.annoucement = response.data.result;
-        console.log(this.annoucement);
+        this.announcement = response.data.result;
+        console.log(this.announcement);
       } catch (error) {
-        console.error('Errore nella chiamata API:', error);
+        console.error('API call error:', error);
       }
     }
   },
