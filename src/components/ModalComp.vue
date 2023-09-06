@@ -82,11 +82,7 @@ export default {
     width: 30%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border-radius: 0;
-    border: 10px solid transparent;
-    background-clip: padding-box;
-    /* Assicura che il gradiente non si estenda oltre il padding */
-    border-image: linear-gradient(to right, #4b443a 10%, #4b443a 10%);
-    border-image-slice: 1;
+    border: 10px solid #4b443a;
 
 }
 

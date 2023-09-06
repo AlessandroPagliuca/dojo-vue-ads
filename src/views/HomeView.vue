@@ -32,6 +32,7 @@
 import axios from 'axios';
 import { store } from '../store';
 import ModalComp from '../components/ModalComp.vue';
+import Cookies from 'js-cookie';
 export default {
   name: 'HomeView',
   components: {
@@ -44,9 +45,19 @@ export default {
     }
   },
   methods: {
+    // Generate a random identifier for the user
+    generateRandomId() {
+      return Math.random().toString(36).substring(2, 15);
+    },
     //temporany function for open modal
     openModal() {
       this.$refs.modal.openModal();
+      //Set a cookie named "cookie_name" with a value of "cookie_value"
+      const userId = this.generateRandomId();
+      Cookies.set('user_cookie', userId, { expires: 7 });
+      console.log('Cookie creato con successo!');
+      const currentUser = Cookies.get('user_cookie');
+      console.log('Valore del cookie:', currentUser);
     },
     // Function for call axios to get the annuncement data
     async getData() {
