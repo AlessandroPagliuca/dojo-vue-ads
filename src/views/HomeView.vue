@@ -18,7 +18,7 @@
     <div class="d-flex flex-column align-items-start py-5">
       <h2 class="fw-semibold display-1">Passa a Premium gratis per 1 mese</h2>
       <span class="fw-semibold py-4">Al termine dell'offerta, solo € 9,99 al mese. Annulla in qualsiasi momento</span>
-      <button class="btn btn-bg text-uppercase rounded-5 py-3 px-4" @click="openModal">vedi i piani</button>
+      <button class="btn btn-bg text-uppercase rounded-5 py-3 px-4">vedi i piani</button>
       <small class="pt-4">Si applicano Termini e condizioni. L'offerta di 1 mese gratis non è disponibile per gli utenti
         che hanno già
         provato Spotify Premium.</small>
@@ -52,12 +52,29 @@ export default {
     //temporany function for open modal
     openModal() {
       this.$refs.modal.openModal();
-      //Set a cookie named "cookie_name" with a value of "cookie_value"
-      const userId = this.generateRandomId();
-      Cookies.set('user_cookie', userId, { expires: 7 });
-      console.log('Cookie creato con successo!');
-      const currentUser = Cookies.get('user_cookie');
-      console.log('Valore del cookie:', currentUser);
+      //chiamo la funzione saveCookie 
+      this.saveCookie();
+    },
+    //funzione asincrona per il salvataggio dei cookie
+    async saveCookie() {
+      try {
+        const value = this.generateRandomId();
+        Cookies.set('name_cookie', value);
+        //creazione array dei dati da salvare nel back-end
+        const dataCookie = {
+          name: 'name_cookie',
+          value: value,
+        };
+        //chaimata per salvare i cookie nel back-end
+        await axios.post(`${store.apiUrl}/cookies`, dataCookie).then(res => {
+          console.log(res.dataCookie);
+        }).catch(error => {
+          console.error('Errore durante il salvataggio del cookie:', error);
+        });
+
+      } catch (error) {
+        console.error('Errore durante il salvataggio:', error)
+      }
     },
     // Function for call axios to get the annuncement data
     async getData() {
@@ -71,7 +88,10 @@ export default {
     }
   },
   mounted() {
+    //call of the getData() function to provide the announcement data as soon as we access the site
     this.getData();
+    //call of the openModal() function to display the modal immediately as soon as we access the site
+    this.openModal();
   }
 
 }
