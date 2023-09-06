@@ -73,7 +73,7 @@ export default {
         });
 
       } catch (error) {
-        console.error('Errore durante il salvataggio:', error)
+        console.error('Error saving:', error)
       }
     },
     // Function for call axios to get the annuncement data
