@@ -24,7 +24,8 @@
         provato Spotify Premium.</small>
     </div>
     <!-- Componente Modal -->
-    <ModalComp ref="modal" :data="announcement" />
+    <ModalComp ref="modal" :price="announcement.price" :duration="announcement.duration" :plan="announcement.plan"
+      :description="announcement.description" :contract="announcement.contract" />
   </div>
 </template>
 
@@ -41,7 +42,13 @@ export default {
   data() {
     return {
       store, //Take apiUrl from the store
-      announcement: null,// Initialization announcement = null, return the data to be printed in the page via the axios call
+      announcement: {
+        price: '',
+        duration: '',
+        plan: '',
+        description: '',
+        contract: '',
+      }
     }
   },
   methods: {
@@ -59,15 +66,17 @@ export default {
     async saveCookie() {
       try {
         const value = this.generateRandomId();
+        const announcementId = this.announcement.id;
         Cookies.set('name_cookie', value);
         //creazione array dei dati da salvare nel back-end
         const dataCookie = {
           name: 'name_cookie',
           value: value,
+          announcement_id: announcementId,
         };
         //chaimata per salvare i cookie nel back-end
-        await axios.post(`${store.apiUrl}/cookies`, dataCookie).then(res => {
-          console.log(res.dataCookie);
+        await axios.post(`${store.apiUrl}/cookies/${announcementId}`, dataCookie).then(res => {
+          console.log(res.dataCookie, 'success');
         }).catch(error => {
           console.error('Errore durante il salvataggio del cookie:', error);
         });
@@ -79,20 +88,38 @@ export default {
     // Function for call axios to get the annuncement data
     async getData() {
       try {
-        const response = await axios.get(`${store.apiUrl}/home`)
+        const response = await axios.get(`${store.apiUrl}/home`);
         this.announcement = response.data.result;
+        this.announcement.id = response.data.result.id; // Assicurati che l'ID dell'annuncio venga ottenuto correttamente
         console.log(this.announcement);
       } catch (error) {
         console.error('API call error:', error);
       }
     }
+
   },
-  mounted() {
-    //call of the getData() function to provide the announcement data as soon as we access the site
-    this.getData();
-    //call of the openModal() function to display the modal immediately as soon as we access the site
-    this.openModal();
+  // mounted() {
+  //   //call of the getData() function to provide the announcement data as soon as we access the site
+  //   this.getData();
+  //   //call of the openModal() function to display the modal immediately as soon as we access the site
+  //   this.openModal();
+  // }
+  async mounted() {
+    try {
+      // Aspetta che i dati dell'annuncio vengano ottenuti prima di aprire la modale
+      await this.getData();
+
+      // Assicurati che l'annuncio abbia un ID valido prima di salvare il cookie
+      if (this.announcement && this.announcement.id) {
+        this.openModal();
+      } else {
+        console.error('ID dell\'annuncio non valido');
+      }
+    } catch (error) {
+      console.error('Errore durante il caricamento dei dati:', error);
+    }
   }
+
 
 }
 </script>

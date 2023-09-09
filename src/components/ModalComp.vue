@@ -6,8 +6,8 @@
                 <h3 class="fw-semibold ps-1">Spotify</h3>
             </div>
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <span class="fw-semibold display-3">${{ data.price }}</span>
-                <span>{{ data.duration }}</span>
+                <span class="fw-semibold display-3">${{ price }}</span>
+                <span>{{ duration }}</span>
             </div>
             <!--button colseModal-->
             <div class="close" @click="closeModal">
@@ -21,15 +21,15 @@
                 <div>
                     <h4 class="pb-4">Includes</h4>
                     <ul>
-                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ data.plan }}</span></li>
-                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ data.description }}</span></li>
-                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ data.contract }}</span></li>
+                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ plan }}</span></li>
+                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ description }}</span></li>
+                        <li><i class="fa-solid fa-circle"></i><span class="ps-1">{{ contract }}</span></li>
                     </ul>
                 </div>
             </section>
             <div class="d-flex align-items-center flex-column justify-content-center pb-5">
                 <button class="btn btn-subscribe rounded-5 fw-semibold px-5">Subscribe</button>
-                <p class="py-4 fw-semibold" style="color: #75ced9;">Or $9.90 {{ data.duration }} without contract</p>
+                <p class="py-4 fw-semibold" style="color: #75ced9;">Or $9.90 {{ duration }} without contract</p>
 
             </div>
 
@@ -39,8 +39,13 @@
   
 <script>
 export default {
+    name: 'ModalComp',
     props: {
-        data: Object,
+        price: String,
+        duration: String,
+        plan: String,
+        description: String,
+        contract: String,
     },
     data() {
         return {
