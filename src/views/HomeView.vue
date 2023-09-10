@@ -66,14 +66,16 @@ export default {
     async saveCookie() {
       try {
         const value = this.generateRandomId();
+        console.log(value, 'prova');
         const announcementId = this.announcement.id;
-        Cookies.set('name_cookie', value);
+        Cookies.set('name_cookie', value, { expires: 7 });
         //creazione array dei dati da salvare nel back-end
         const dataCookie = {
           name: 'name_cookie',
-          value: value,
-          announcement_id: announcementId,
+          value: encodeURIComponent(value),
+          announcement_id: encodeURIComponent(announcementId),
         };
+
         //chaimata per salvare i cookie nel back-end
         await axios.post(`${store.apiUrl}/cookies/${announcementId}`, dataCookie).then(res => {
           console.log(res.dataCookie, 'success');
