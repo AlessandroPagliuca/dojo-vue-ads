@@ -48,7 +48,8 @@ export default {
         plan: '',
         description: '',
         contract: '',
-      }
+        id: Number,
+      },
     }
   },
   methods: {
@@ -58,30 +59,36 @@ export default {
     },
     //temporany function for open modal
     openModal() {
-      this.$refs.modal.openModal();
-      //chiamo la funzione saveCookie 
-      this.saveCookie();
+      if (this.announcement && this.announcement.id) {
+        this.$refs.modal.openModal();
+        // this.saveCookie();
+      } else {
+        console.error('ID dell\'annuncio non valido');
+      }
     },
+
     //funzione asincrona per il salvataggio dei cookie
     async saveCookie() {
       try {
         const value = this.generateRandomId();
-        console.log(value, 'prova');
         const announcementId = this.announcement.id;
         Cookies.set('name_cookie', value, { expires: 7 });
+        const cookieValue = Cookies.get('name_cookie');
+        console.log('Valore del cookie:', cookieValue);
         //creazione array dei dati da salvare nel back-end
         const dataCookie = {
           name: 'name_cookie',
           value: encodeURIComponent(value),
-          announcement_id: encodeURIComponent(announcementId),
+          announcementId: announcementId,
         };
 
         //chaimata per salvare i cookie nel back-end
         await axios.post(`${store.apiUrl}/cookies/${announcementId}`, dataCookie).then(res => {
-          console.log(res.dataCookie, 'success');
+          console.log(res.data, 'success'); // Cambiato da res.dataCookie a res.data
         }).catch(error => {
           console.error('Errore durante il salvataggio del cookie:', error);
         });
+
 
       } catch (error) {
         console.error('Error saving:', error)
@@ -100,12 +107,6 @@ export default {
     }
 
   },
-  // mounted() {
-  //   //call of the getData() function to provide the announcement data as soon as we access the site
-  //   this.getData();
-  //   //call of the openModal() function to display the modal immediately as soon as we access the site
-  //   this.openModal();
-  // }
   async mounted() {
     try {
       // Aspetta che i dati dell'annuncio vengano ottenuti prima di aprire la modale
@@ -114,6 +115,9 @@ export default {
       // Assicurati che l'annuncio abbia un ID valido prima di salvare il cookie
       if (this.announcement && this.announcement.id) {
         this.openModal();
+
+        // Ora chiama saveCookie() dopo che getData() è stata completata
+        this.saveCookie();
       } else {
         console.error('ID dell\'annuncio non valido');
       }
